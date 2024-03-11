@@ -11,6 +11,10 @@
 
 #include "DataFormats/Math/interface/deltaR.h"
 
+float sigmoid (float x) {
+  return (1. / (1 + std::exp(-1. * x)));
+}
+
 struct jet_legacy_t {
     float pt = -999.;
     float eta = -999.;
@@ -171,12 +175,13 @@ bool sv_ul_sort (const sv_legacy_t& svA, const sv_legacy_t& svB)
 class BDTinference {
   public:
   BDTinference ();
-    BDTinference (std::string filename);
+    BDTinference (std::string filename, bool use_sigmoid);
     ~BDTinference ();
     std::vector<float> get_bdt_outputs(std::vector<float> inputs);
 
   private:
     BoosterHandle booster_;
+    bool use_sigmoid_;
 
 };
 

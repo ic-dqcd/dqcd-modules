@@ -9,6 +9,8 @@ ROOT = import_root()
 class DQCDULBDTNoJetProducer(JetLepMetSyst):
     def __init__(self, *args, **kwargs):
         scenario = kwargs.pop("scenario", "A")
+        default_name = "bdt_scenario%s" % scenario
+        use_sigmoid = "false"
         if scenario == "A":
             default_model_path = os.path.expandvars(
                 # "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved.model")
@@ -24,12 +26,17 @@ class DQCDULBDTNoJetProducer(JetLepMetSyst):
         elif scenario == "C":
             default_model_path = os.path.expandvars(
                 "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioC_new.model")
+        elif scenario == "vector":
+            default_model_path = os.path.expandvars(
+                "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_vector_no_jet_no_cut.model")
+            default_name = "bdt_vector"
+            use_sigmoid = "true"
         else:
             raise ValueError("Only BDTs for scenarios A, B1, B2, and C are already implemented")
 
         self.model_path = kwargs.pop("model_path", default_model_path)
         self.model = self.model_path.replace("/", "_").replace(".", "_")
-        self.bdt_name = kwargs.pop("bdt_name", "bdt_scenario%s" % scenario)
+        self.bdt_name = kwargs.pop("bdt_name", default_name)
         # self.model_m = kwargs.pop("model_m", 2.0)
         # self.model_ctau = kwargs.pop("model_ctau", 10.0)
         # self.model_xi0 = kwargs.pop("model_xi0", 1.0)
@@ -50,8 +57,8 @@ class DQCDULBDTNoJetProducer(JetLepMetSyst):
             os.environ["_DQCDBDT_%s" % self.model] = "_DQCDBDT_%s" % self.model
 
             ROOT.gInterpreter.Declare("""
-                auto bdt%s = BDTinference("%s");
-            """ % (self.model, self.model_path))
+                auto bdt%s = BDTinference("%s", %s);
+            """ % (self.model, self.model_path, use_sigmoid))
 
             ROOT.gInterpreter.Declare("""
                 using Vfloat = const ROOT::RVec<float>&;
@@ -220,12 +227,13 @@ class DQCDULBDTNoJetProducer(JetLepMetSyst):
         # Some fixes needed
         #   - muonSV_mu*pt systematics (probably need to use mu*index and extract the pt from it)
         #   - SV systematics?
+
         df = df.Define(s, f"""!(((HLT_Mu9_IP6_part0 == 1) || 
-            (HLT_Mu9_IP6_part1 == 1) || (HLT_Mu9_IP6_part2 == 1) || (HLT_Mu9_IP6_part3 == 1) || 
-            (HLT_Mu9_IP6_part4 == 1)) && (Muon_pt[Muon_pt > 5 && abs(Muon_eta) < 2.4].size() > 0)
-            && (Jet_pt{self.jet_syst}[Jet_pt{self.jet_syst} > 15 && abs(Jet_eta) < 2.4].size() > 0))
-            ? std::vector<float>(1, -1.)
-            : get_bdt_outputs_{self.model}(
+           (HLT_Mu9_IP6_part1 == 1) || (HLT_Mu9_IP6_part2 == 1) || (HLT_Mu9_IP6_part3 == 1) || 
+           (HLT_Mu9_IP6_part4 == 1)) && (Muon_pt[Muon_pt > 5 && abs(Muon_eta) < 2.4].size() > 0)
+           && (Jet_pt{self.jet_syst}[Jet_pt{self.jet_syst} > 15 && abs(Jet_eta) < 2.4].size() > 0))
+           ? std::vector<float>(1, -1.)
+           : get_bdt_outputs_{self.model}(
                 nMuon, nSV, nsv, nmuonSV,
                 MET{self.met_smear_tag}_pt{self.met_syst},
                 MET{self.met_smear_tag}_phi{self.met_syst},
