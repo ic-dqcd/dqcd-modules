@@ -1,9 +1,9 @@
 #include "DQCD/Modules/interface/BDTinference.h"
 
-BDTinference::BDTinference (std::string filename) {
+BDTinference::BDTinference (std::string filename, bool use_sigmoid=false) {
     XGBoosterCreate(NULL, 0, &booster_);
     XGBoosterLoadModel(booster_, filename.c_str()); // second argument should be a const char *.
-
+    use_sigmoid_ = use_sigmoid;
     //bst_ulong out_len;
     //const char **out_dump_array;
     //XGBoosterDumpModel(booster_, "", 0, &out_len, &out_dump_array);
@@ -54,7 +54,10 @@ std::vector<float> BDTinference::get_bdt_outputs(std::vector<float> inputs) {
     {
         for(unsigned int ic=0; ic < out_dim; ++ic) {
             //std::cout << "Score: " << out_result[ic] << std::endl;
-            results.push_back(out_result[ic]);
+            if (!use_sigmoid_)
+                results.push_back(out_result[ic]);
+            else
+                results.push_back(sigmoid(out_result[ic]));
         }
     }
     //for (auto &elem: results)
