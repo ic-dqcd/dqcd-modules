@@ -6,7 +6,7 @@ from Base.Modules.baseModules import JetLepMetSyst
 ROOT = import_root()
 
 
-class DQCDULBDTNoJetProducer(JetLepMetSyst):
+class DQCDULBDTNoJetNoChi2Producer(JetLepMetSyst):
     def __init__(self, *args, **kwargs):
         scenario = kwargs.pop("scenario", "A")
         default_name = "bdt_scenario%s" % scenario
@@ -15,21 +15,22 @@ class DQCDULBDTNoJetProducer(JetLepMetSyst):
             default_model_path = os.path.expandvars(
                 # "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved.model")
                 #"$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioA_no_jet.model")
-                "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioA_no_jet_no_cut.model")
+                "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioA_no_jet_no_muonSVchi2.model")
                 #"$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioA_new.model")
         elif scenario == "B1":
+            raise ValueError("Not implemented")
             default_model_path = os.path.expandvars(
-                # "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioB1.model")
-                "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioB1_no_jet_no_cut.model")
+                "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioB1.model")
         elif scenario == "B2":
-            raise ValueError("B2 no jet not implemented")
+            raise ValueError("Not implemented")
             default_model_path = os.path.expandvars(
                 "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioB2_new.model")
         elif scenario == "C":
-            raise ValueError("C no jet not implemented")
+            raise ValueError("Not implemented")
             default_model_path = os.path.expandvars(
                 "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioC_new.model")
         elif scenario == "vector":
+            raise ValueError("Not implemented")
             default_model_path = os.path.expandvars(
                 "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_vector_no_jet_no_cut.model")
             default_name = "bdt_vector"
@@ -45,7 +46,7 @@ class DQCDULBDTNoJetProducer(JetLepMetSyst):
         # self.model_xi0 = kwargs.pop("model_xi0", 1.0)
         # self.model_xiL = kwargs.pop("model_xiL", 1.0)
 
-        super(DQCDULBDTNoJetProducer, self).__init__(*args, **kwargs)
+        super(DQCDULBDTNoJetNoChi2Producer, self).__init__(*args, **kwargs)
 
         base = "{}/{}/src/DQCD/Modules".format(
             os.getenv("CMT_CMSSW_BASE"), os.getenv("CMT_CMSSW_VERSION"))
@@ -159,8 +160,8 @@ class DQCDULBDTNoJetProducer(JetLepMetSyst):
                         muons[6].miniPFRelIso_all, muons[7].miniPFRelIso_all, 
                         muons[0].jetIdx, muons[1].jetIdx, muons[2].jetIdx, muons[3].jetIdx, 
                         muons[4].jetIdx, muons[5].jetIdx, muons[6].jetIdx, muons[7].jetIdx, 
-                        muonsvs[0].chi2, muonsvs[1].chi2, muonsvs[2].chi2, muonsvs[3].chi2, 
-                        muonsvs[4].chi2, muonsvs[5].chi2, muonsvs[6].chi2, muonsvs[7].chi2, 
+                        // muonsvs[0].chi2, muonsvs[1].chi2, muonsvs[2].chi2, muonsvs[3].chi2, 
+                        // muonsvs[4].chi2, muonsvs[5].chi2, muonsvs[6].chi2, muonsvs[7].chi2, 
                         muonsvs[0].pAngle, muonsvs[1].pAngle, muonsvs[2].pAngle, muonsvs[3].pAngle, 
                         muonsvs[4].pAngle, muonsvs[5].pAngle, muonsvs[6].pAngle, muonsvs[7].pAngle, 
                         muonsvs[0].dlen, muonsvs[1].dlen, muonsvs[2].dlen, muonsvs[3].dlen, 
@@ -266,7 +267,7 @@ class DQCDULBDTNoJetProducer(JetLepMetSyst):
 
         return df, [b_name]
 
-def DQCDULBDTNoJet(*args, **kwargs):
+def DQCDULBDTNoJetNoChi2(*args, **kwargs):
     """
     Returns the DQCD UL BDT output.
 
@@ -289,4 +290,4 @@ def DQCDULBDTNoJet(*args, **kwargs):
                 # model_xiL: 0
 
     """
-    return lambda: DQCDULBDTNoJetProducer(*args, **kwargs)
+    return lambda: DQCDULBDTNoJetNoChi2Producer(*args, **kwargs)
