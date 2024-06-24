@@ -13,12 +13,11 @@ class DQCDULBDTOnlyMuProducer(JetLepMetSyst):
         use_sigmoid = "false"
         if scenario == "A":
             default_model_path = os.path.expandvars(
-                "$CMSSW_BASE/src/DQCD/Modules/data/XGB_ONLYMU_60.model")
+                "$CMSSW_BASE/src/DQCD/Modules/data/XGB-ONLYMU_46_scenarioA.model")
         elif scenario == "B1":
-            raise ValueError("B1 onlymu not implemented")
             default_model_path = os.path.expandvars(
                 # "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioB1.model")
-                "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioB1_no_jet_no_cut.model")
+                "$CMSSW_BASE/src/DQCD/Modules/data/XGB-ONLYMU_41_scenarioB1.model")
         elif scenario == "B2":
             raise ValueError("B2 onlymu not implemented")
             default_model_path = os.path.expandvars(
@@ -28,13 +27,12 @@ class DQCDULBDTOnlyMuProducer(JetLepMetSyst):
             default_model_path = os.path.expandvars(
                 "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioC_new.model")
         elif scenario == "vector":
-            raise ValueError("Vector onlymu not implemented")
             default_model_path = os.path.expandvars(
-                "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_vector_no_jet_no_cut.model")
+                "$CMSSW_BASE/src/DQCD/Modules/data/XGB-ONLYMU_108_vector.model")
             default_name = "bdt_vector"
             # use_sigmoid = "true"
         else:
-            raise ValueError("Only BDT for scenario A is already implemented")
+            raise ValueError("Only BDT for scenario A, B1, and vector portal are already implemented")
 
         self.model_path = kwargs.pop("model_path", default_model_path)
         self.model = self.model_path.replace("/", "_").replace(".", "_")
