@@ -13,11 +13,11 @@ class DQCDULBDTOnlyMuProducer(JetLepMetSyst):
         use_sigmoid = "false"
         if scenario == "A":
             default_model_path = os.path.expandvars(
-                "$CMSSW_BASE/src/DQCD/Modules/data/XGB-ONLYMU_46_scenarioA.model")
+                "$CMSSW_BASE/src/DQCD/Modules/data/XGB_ONLYMU_46_scenarioA.model")
         elif scenario == "B1":
             default_model_path = os.path.expandvars(
                 # "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioB1.model")
-                "$CMSSW_BASE/src/DQCD/Modules/data/XGB-ONLYMU_41_scenarioB1.model")
+                "$CMSSW_BASE/src/DQCD/Modules/data/XGB_ONLYMU_41_scenarioB1.model")
         elif scenario == "B2":
             raise ValueError("B2 onlymu not implemented")
             default_model_path = os.path.expandvars(
@@ -28,7 +28,7 @@ class DQCDULBDTOnlyMuProducer(JetLepMetSyst):
                 "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioC_new.model")
         elif scenario == "vector":
             default_model_path = os.path.expandvars(
-                "$CMSSW_BASE/src/DQCD/Modules/data/XGB-ONLYMU_108_vector.model")
+                "$CMSSW_BASE/src/DQCD/Modules/data/XGB_ONLYMU_108_vector.model")
             default_name = "bdt_vector"
             # use_sigmoid = "true"
         else:
