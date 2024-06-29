@@ -80,7 +80,6 @@ class DQCDULBDTProducer(JetLepMetSyst):
                     Vfloat SV_pAngle, Vfloat SV_chi2, Vfloat SV_ndof
                 )
                 {
-                    std::cout << "Starting" << std::endl;
                     std::vector<jet_ul_t> jets(std::max(2, nJet), jet_ul_t());
                     for (int i = 0; i < nJet; i++) {
                         jets[i] = jet_ul_t({
@@ -128,8 +127,6 @@ class DQCDULBDTProducer(JetLepMetSyst):
                         });
                     }
                     std::stable_sort(svs.begin(), svs.end(), sv_ul_sort);
-
-                    std::cout << "OK" << std::endl;
 
                     return bdt%s.get_bdt_outputs({
                         (float) nJet, (float) nMuon, (float) nsv,
