@@ -20,7 +20,7 @@ class DQCDULBDTNoJetProducer(JetLepMetSyst):
         elif scenario == "B1":
             default_model_path = os.path.expandvars(
                 # "$CMSSW_BASE/src/DQCD/Modules/data/model_ul_saved_scenarioB1.model")
-                "$CMSSW_BASE/src/DQCD/Modules/data/XGB_NOJETS_46_scenarioB1_final.model")
+                "$CMSSW_BASE/src/DQCD/Modules/data/XGB_NOJETS_54_scenarioB1_final_new.model")
         elif scenario == "B2":
             raise ValueError("B2 no jet not implemented")
             default_model_path = os.path.expandvars(
